@@ -15,11 +15,11 @@ Rails.application.routes.draw do
     scope '/messsage' do
       get '/' => 'messages#letzte_abholen'
       post '/' => 'messages#create'
-      delete '/:id' => 'messages#destroy_single'
+      delete '/:id' => 'messages#destroy_eine'
     end
     scope '/messages' do
       get '/' => 'messages#alle_abholen'
-      delete '/' => 'messages#destroy_eine'
+      delete '/' => 'messages#destroy_alle'
     end
   end
 
