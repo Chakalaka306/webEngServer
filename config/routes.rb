@@ -6,20 +6,20 @@ Rails.application.routes.draw do
  # resources :users
 
   scope '/:login' do
-    get '/' => 'users#anmelden'
+    get '/' => 'users#register'
     post '/' => 'users#create'
     delete '/' => 'users#destroy'
     scope '/pubkey' do
       get '/' => 'users#pubkey'
     end
     scope '/messsage' do
-      get '/' => 'messages#letzte_abholen'
+      get '/' => 'messages#get_last'
       post '/' => 'messages#create'
-      delete '/:id' => 'messages#destroy_eine'
+      delete '/:id' => 'messages#destroy_single'
     end
     scope '/messages' do
-      get '/' => 'messages#alle_abholen'
-      delete '/' => 'messages#destroy_alle'
+      get '/' => 'messages#get_all'
+      delete '/' => 'messages#destroy_all'
     end
   end
 

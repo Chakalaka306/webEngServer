@@ -1,11 +1,22 @@
 class MessagesController < ApplicationController
 
-  ##get '/' => 'messages#letzte_abholen'
-  ##post '/' => 'messages#create'
-  ##delete '/:id' => 'messages#destroy_eine'
-  ##get '/' => 'messages#alle_abholen'
-  ##delete '/' => 'messages#destroy_alle
-  def letzt_abholen
+  #get '/' => 'users#register'
+  #post '/' => 'users#create'
+  #delete '/' => 'users#destroy'
+  #scope '/pubkey' do
+  #  get '/' => 'users#pubkey'
+  #end
+  #scope '/messsage' do
+  #  get '/' => 'messages#get_last'
+  #  post '/' => 'messages#create'
+  #  delete '/:id' => 'messages#destroy_single'
+  #end
+  #scope '/messages' do
+  #  get '/' => 'messages#get_all'
+  #  delete '/' => 'messages#ddestroy_all'
+  #end
+
+  def get_last
     # Überprüfen der Signatur an das Model message.rb deligiert => DRY
     user = Message.check_sig(params[:timestamp].to_s, params[:login], params[:digitale_signatur])
 
@@ -60,7 +71,7 @@ class MessagesController < ApplicationController
     end
   end
 
-  def destroy_eine
+  def destroy_single
     user = Message.check_sig(params[:timestamp].to_s, params[:login], params[:digitale_signatur])
 
     if user == ""
@@ -73,7 +84,7 @@ class MessagesController < ApplicationController
     end
   end
 
-  def alle_abholen
+  def get_all
     # Überprüfen der Signatur an das Model message.rb deligiert => DRY
     user = Message.check_sig(params[:timestamp].to_s, params[:login], params[:digitale_signatur])
 
@@ -85,7 +96,7 @@ class MessagesController < ApplicationController
     end
   end
 
-  def destroy_alle
+  def destroy_all
     user = Message.check_sig(params[:timestamp].to_s, params[:login], params[:digitale_signatur])
 
     if user == ""
