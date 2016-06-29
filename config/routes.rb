@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     scope '/pubkey' do
       get '/' => 'users#pubkey'
     end
-    scope '/messsage' do
+    scope '/message' do
       get '/' => 'messages#get_last'
       post '/' => 'messages#create'
       delete '/:id' => 'messages#destroy_single'

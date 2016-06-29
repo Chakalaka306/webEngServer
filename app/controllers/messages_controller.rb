@@ -6,14 +6,14 @@ class MessagesController < ApplicationController
     #scope '/pubkey' do
       #  get '/' => 'users#pubkey'
     #end
-    #scope '/messsage' do
+    #scope '/message' do
       #  get '/' => 'messages#get_last'
       #  post '/' => 'messages#create'
       #  delete '/:id' => 'messages#destroy_single'
     #end
     #scope '/messages' do
       #  get '/' => 'messages#get_all'
-      #  delete '/' => 'messages#ddestroy_all'
+      #  delete '/' => 'messages#destroy_all'
     #end
   #end
 
@@ -62,7 +62,8 @@ class MessagesController < ApplicationController
 
     # Erstellen der Nachricht
     msg = Message.new(recipient: recipient, content_enc: params[:content_enc], sender: params[:sender],
-                      iv: params[:iv], key_recipient_enc: params[:key_recipient_enc], sig_recipient: params[:sig_recipient],
+                      iv: params[:iv], key_recipient_enc: params[:key_recipient_enc],
+                      sig_recipient: params[:sig_recipient],
                       sig_service: params[:sig_service])
 
     # Persistieren der Nachricht in der DB
