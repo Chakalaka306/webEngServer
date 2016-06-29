@@ -1,19 +1,20 @@
 class MessagesController < ApplicationController
-
-  #get '/' => 'users#register'
-  #post '/' => 'users#create'
-  #delete '/' => 'users#destroy'
-  #scope '/pubkey' do
-  #  get '/' => 'users#pubkey'
-  #end
-  #scope '/messsage' do
-  #  get '/' => 'messages#get_last'
-  #  post '/' => 'messages#create'
-  #  delete '/:id' => 'messages#destroy_single'
-  #end
-  #scope '/messages' do
-  #  get '/' => 'messages#get_all'
-  #  delete '/' => 'messages#ddestroy_all'
+  #scope '/:login' do
+    #get '/' => 'users#register'
+    #post '/' => 'users#create'
+    #delete '/' => 'users#destroy'
+    #scope '/pubkey' do
+      #  get '/' => 'users#pubkey'
+    #end
+    #scope '/messsage' do
+      #  get '/' => 'messages#get_last'
+      #  post '/' => 'messages#create'
+      #  delete '/:id' => 'messages#destroy_single'
+    #end
+    #scope '/messages' do
+      #  get '/' => 'messages#get_all'
+      #  delete '/' => 'messages#ddestroy_all'
+    #end
   #end
 
   def get_last
@@ -24,7 +25,8 @@ class MessagesController < ApplicationController
       head 404
     else
       # Gibt die letzte Nachricht im JSON Format an den Client zurück
-      render json: user.messages.last.to_json(only: %w(sender content_enc iv key_recipient_enc sig_recipient id created_at))
+      render json: user.messages.last.to_json(only: %w(sender content_enc iv
+                                              key_recipient_enc sig_recipient id created_at))
     end
 
   end
@@ -103,7 +105,7 @@ class MessagesController < ApplicationController
       head 404
     else
       messages = user.messages
-      messages.destroy_alle
+      messages.destroy_all
 
       render nothing: true ,  status: 200
     end
