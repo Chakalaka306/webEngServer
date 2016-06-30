@@ -18,7 +18,7 @@ class MessagesController < ApplicationController
   #end
 
   def get_last
-    # Überprüfen der Signatur an das Model message.rb deligiert => DRY
+    # Überprüfen der Signatur an message.rb
     user = Message.check_sig(params[:timestamp].to_s, params[:login], params[:digitale_signatur])
 
     if user == ""
@@ -33,31 +33,24 @@ class MessagesController < ApplicationController
 
   def create
     begin
-      # Generate pubkey_user from DB
+      # erstellen des pubkey_user von der DB, 1. public key des senders holen.
       pub_key_sender = User.find_by(login: params[:sender]).pubkey_user
       pubkey_user = OpenSSL::PKey::RSA.new(pub_key_sender)
 
 
-      # Failsafe Default - return 404 wenn nicht richtiger pubkey zum entschlüsseln von sig_service und erlaubter timestamp
+      # erlaubter timestamp wird überprüft
       check = false
-      check2 = false
 
-
-      # Wenn sig_service mit dem public key entschlüsselt werden kann, dann ist der erste check erfolgreich
-      pubkey_user.public_decrypt(Base64.decode64(params[:sig_service]))
-      check = true
-
-
-      # Wenn aktueller timestamp und gesendeter timestamp weniger als 5 Minuten auseinander liegen, dann ist der zweite check erfolgreich
+      #aktueller timestamp und gesenderter timestap dürfen nicht mehr als 5 min auseinander liegen
       if Time.zone.now.to_i - params[:timestamp].to_i < 300
-        check2 = true
+        check = true
       end
-
-    rescue
+      rescue # fehler behandlung
     end
 
-    return head 404 unless check and check2
+    return head 404 unless check  # falls die Bedinung nicht erfüllt dann fehler
 
+    # empfänger der nachricht ermitteln
     recipient = User.find_by(login: params[:recipient]).id
 
     # Erstellen der Nachricht
@@ -66,14 +59,16 @@ class MessagesController < ApplicationController
                       sig_recipient: params[:sig_recipient],
                       sig_service: params[:sig_service])
 
-    # Persistieren der Nachricht in der DB
+    # speichern der Nachricht in der datenbank
     if msg.save
-      render nothing: true , status: 201
-    else
-      render nothing: true , status: 404
+      render nothing: true,
+              status: 201
+    else # wurde nachricht nicht gespeichert, wird 404 zurückgegeben
+      render nothing: true ,
+             status: 404
     end
   end
-
+  # löschen nachricht per id
   def destroy_single
     user = Message.check_sig(params[:timestamp].to_s, params[:login], params[:digitale_signatur])
 
@@ -86,7 +81,7 @@ class MessagesController < ApplicationController
       render nothing: true ,  status: 200
     end
   end
-
+  # alle nachrichten abrufen
   def get_all
     # Überprüfen der Signatur an das Model message.rb deligiert => DRY
     user = Message.check_sig(params[:timestamp].to_s, params[:login], params[:digitale_signatur])
@@ -98,7 +93,7 @@ class MessagesController < ApplicationController
       render json: user.messages.order('created_at desc').to_json(only: %w(sender content_enc iv key_recipient_enc sig_recipient id created_at))
     end
   end
-
+  # alle nachrichten löschen
   def destroy_all
     user = Message.check_sig(params[:timestamp].to_s, params[:login], params[:digitale_signatur])
 
